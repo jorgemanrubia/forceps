@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    forceps (0.0.1)
+    forceps (0.5.0)
       rails (~> 4.0.2)
 
 GEM
@@ -34,6 +34,7 @@ GEM
     arel (4.0.1)
     atomic (1.1.14)
     builder (3.1.4)
+    database_cleaner (1.2.0)
     erubis (2.7.0)
     hike (1.2.3)
     i18n (0.6.9)
@@ -84,5 +85,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  database_cleaner
   forceps!
   sqlite3
