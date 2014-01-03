@@ -19,7 +19,9 @@ module Forceps
     end
 
     def define_remote_classes
+      return if @remote_classes_defined
       remote_classes.each{|remote_class| define_remote_class(remote_class)}
+      @remote_classes_defined = true
     end
 
     def define_remote_class(klass)
