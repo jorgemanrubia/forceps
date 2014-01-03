@@ -8,7 +8,7 @@ class SimpleTest < ActiveSupport::TestCase
   end
 
   test "should download a single record" do
-    Forceps.configure only: [Invoice]
+    Forceps.configure
     Forceps::Remote::Invoice.find_by_number(@remote_invoice.number).copy_to_local
     assert_identical @remote_invoice.becomes(Invoice), Invoice.find_by_number(123)
   end

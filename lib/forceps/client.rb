@@ -15,7 +15,7 @@ module Forceps
     end
 
     def remote_classes
-      options[:only]
+      @remote_classes ||= ActiveRecord::Base.descendants - [ActiveRecord::SchemaMigration]
     end
 
     def define_remote_classes
