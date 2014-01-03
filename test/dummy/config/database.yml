@@ -20,7 +20,7 @@ test:
 
 remote:
   adapter: sqlite3
-  database: db/target.sqlite3
+  database: db/remote.sqlite3
   pool: 5
   timeout: 5000
 
