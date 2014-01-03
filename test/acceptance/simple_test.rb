@@ -7,7 +7,6 @@ class SimpleTest < ActiveSupport::TestCase
     @remote_invoice = RemoteInvoice.create! number: 123, date: Time.now
   end
 
-
   test "should download a single record" do
     Forceps.configure only: [Invoice]
     Forceps::Remote::Invoice.find_by_number(@remote_invoice.number).copy_to_local
