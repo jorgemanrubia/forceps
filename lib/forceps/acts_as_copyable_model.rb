@@ -3,9 +3,9 @@ module Forceps
     extend ActiveSupport::Concern
 
     def copy_to_local
-      # 'self.dup.becomes(Invoice)' won't work because of different  AR connections.
-      # todo: prepare for rails 3 and attribute protection
       without_record_timestamps do
+        # 'self.dup.becomes(Invoice)' won't work because of different  AR connections.
+        # todo: prepare for rails 3 and attribute protection
         cloned_record = self.class.base_class.new(self.attributes.except('id'))
         cloned_record.save!
       end
