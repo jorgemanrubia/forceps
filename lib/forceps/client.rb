@@ -27,10 +27,6 @@ module Forceps
 
       new_class = Class.new(klass) do
         table_name = class_name.tableize
-
-        amoeba do
-          enable
-        end
       end
 
       Forceps::Remote.const_set(class_name, new_class)

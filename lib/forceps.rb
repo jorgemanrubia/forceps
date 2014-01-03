@@ -1,6 +1,5 @@
 require "forceps/client"
 require "forceps/acts_as_copyable_model"
-require "amoeba"
 
 module Forceps
   def self.configure(options={})
