@@ -1,7 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  date: 2014-01-01
+invoice_1:
+  number: 1
+  date: 2014-1-1
+  user: jorge
 
-two:
-  date: 2014-01-01
+invoice_2:
+  number: 2
+  date: 2014-1-2
+  user: jorge
