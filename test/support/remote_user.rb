@@ -1,7 +1,8 @@
-class RemoteInvoice < Invoice
+class RemoteUser < User
   establish_connection 'remote'
+  table_name = 'users'
 
-  table_name = 'invoices'
+  has_many :invoices, class_name: 'RemoteInvoice', foreign_key: 'user_id'
 end
 
 
