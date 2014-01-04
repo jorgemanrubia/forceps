@@ -15,13 +15,13 @@ module Forceps
       {}
     end
 
-    def remote_classes
-      @remote_classes ||= ActiveRecord::Base.descendants - [ActiveRecord::SchemaMigration]
+    def classes_to_generate_remote_for
+      @classes_to_generate_remote_for ||= ActiveRecord::Base.descendants - [ActiveRecord::SchemaMigration]
     end
 
     def define_remote_classes
       return if @remote_classes_defined
-      remote_classes.each{|remote_class| define_remote_class(remote_class)}
+      classes_to_generate_remote_for.each{|remote_class| define_remote_class(remote_class)}
       @remote_classes_defined = true
     end
 
@@ -41,7 +41,7 @@ module Forceps
     end
 
     def make_associations_reference_remote_classes
-      remote_classes.each do |remote_class|
+      classes_to_generate_remote_for.each do |remote_class|
         make_associations_reference_remote_classes_for(remote_class)
       end
     end
