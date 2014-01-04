@@ -5,7 +5,7 @@ module Forceps
     def configure(options={})
       @options = options.merge(default_options)
 
-      define_remote_model_classes
+      declare_remote_model_classes
       make_associations_reference_remote_classes
     end
 
@@ -19,13 +19,13 @@ module Forceps
       @model_classes ||= ActiveRecord::Base.descendants - [ActiveRecord::SchemaMigration]
     end
 
-    def define_remote_model_classes
+    def declare_remote_model_classes
       return if @remote_classes_defined
-      model_classes.each { |remote_class| define_remote_model_class(remote_class) }
+      model_classes.each { |remote_class| declare_remote_model_class(remote_class) }
       @remote_classes_defined = true
     end
 
-    def define_remote_model_class(klass)
+    def declare_remote_model_class(klass)
       class_name = klass.name
 
       new_class = Class.new(klass) do
