@@ -22,4 +22,6 @@ class SimpleTest < ActiveSupport::TestCase
     assert_identical @remote_user, copied_user
     2.times{|index| assert_identical @remote_user.invoices[index], copied_user.invoices[index]}
   end
+
+
 end

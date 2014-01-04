@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20140104145227) do
   create_table "line_items", force: true do |t|
     t.integer  "quantity"
     t.integer  "product_id"
+    t.integer  "invoice_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
