@@ -5,6 +5,7 @@ require File.expand_path("../dummy/config/environment.rb", __FILE__)
 require "rails/test_help"
 require 'database_cleaner'
 require 'database_cleaner/active_record/base'
+require 'awesome_print'
 
 Rails.backtrace_cleaner.remove_silencers!
 

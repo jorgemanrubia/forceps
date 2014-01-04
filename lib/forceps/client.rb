@@ -21,7 +21,7 @@ module Forceps
 
     def define_remote_model_classes
       return if @remote_classes_defined
-      model_classes.each{|remote_class| define_remote_model_class(remote_class)}
+      model_classes.each { |remote_class| define_remote_model_class(remote_class) }
       @remote_classes_defined = true
     end
 
@@ -41,21 +41,28 @@ module Forceps
     end
 
     def make_associations_reference_remote_classes
-      model_classes.each do |remote_class|
-        make_associations_reference_remote_classes_for(remote_class)
+      model_classes.each do |model_class|
+        make_associations_reference_remote_classes_for(model_class)
       end
     end
 
-    def make_associations_reference_remote_classes_for(remote_class)
-      remote_class.reflect_on_all_associations.each do |association|
+    def make_associations_reference_remote_classes_for(model_class)
+      model_class.reflect_on_all_associations.each do |association|
         next if association.klass.name =~ /Forceps::Remote/
-        reference_remote_class(association)
+        reference_remote_class(model_class, association)
       end
     end
 
-    def reference_remote_class(association)
+    def reference_remote_class(model_class, association)
       related_remote_class = remote_class_for(association.klass.name)
-      association.instance_variable_set("@klass", related_remote_class)
+      remote_model_class = remote_class_for(model_class.name)
+
+      cloned_association = association.dup
+      cloned_association.instance_variable_set("@klass", related_remote_class)
+
+      cloned_reflections = remote_model_class.reflections.dup
+      cloned_reflections[cloned_association.name.to_sym] = cloned_association
+      remote_model_class.reflections = cloned_reflections
     end
   end
 end

@@ -33,6 +33,7 @@ GEM
       tzinfo (~> 0.3.37)
     arel (4.0.1)
     atomic (1.1.14)
+    awesome_print (1.1.0)
     builder (3.1.4)
     database_cleaner (1.2.0)
     erubis (2.7.0)
@@ -85,6 +86,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
   database_cleaner
   forceps!
   sqlite3
