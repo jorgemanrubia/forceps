@@ -22,10 +22,18 @@ module Forceps
     end
 
     class DeepCopier
-      def copy(record)
+      def copy(remote_object)
         # 'self.dup.becomes(Invoice)' won't work because of different  AR connections.
         # todo: prepare for rails 3 and attribute protection
-        record.class.base_class.create!(record.attributes.except('id'))
+        copied_object = remote_object.class.base_class.create!(remote_object.attributes.except('id'))
+
+        remote_object.class.reflect_on_all_associations(:has_many).collect(&:name).each do |association_name|
+          remote_object.send(association_name).find_each do |remote_associated_object|
+            remote_object.send(association_name) << copy(remote_associated_object)
+          end
+        end
+
+        copied_object
       end
     end
   end

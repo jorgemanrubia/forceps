@@ -6,6 +6,7 @@ module Forceps
       @options = options.merge(default_options)
 
       define_remote_classes
+      make_associations_reference_remote_classes
     end
 
     private
@@ -32,7 +33,29 @@ module Forceps
       end
 
       Forceps::Remote.const_set(class_name, new_class)
-      Forceps::Remote::const_get(class_name).establish_connection 'remote'
+      remote_class_for(class_name).establish_connection 'remote'
+    end
+
+    def remote_class_for(class_name)
+      Forceps::Remote::const_get(class_name)
+    end
+
+    def make_associations_reference_remote_classes
+      remote_classes.each do |remote_class|
+        make_associations_reference_remote_classes_for(remote_class)
+      end
+    end
+
+    def make_associations_reference_remote_classes_for(remote_class)
+      remote_class.reflect_on_all_associations.each do |association|
+        next if association.klass.name =~ /Forceps::Remote/
+        reference_remote_classes(association)
+      end
+    end
+
+    def reference_remote_classes(association)
+      related_remote_class = remote_class_for(association.klass.name)
+      association.instance_variable_set("@klass", related_remote_class)
     end
   end
 end

@@ -15,7 +15,7 @@ class SimpleTest < ActiveSupport::TestCase
 
   test "should download a record with 'has_many' associated objects" do
     @remote_user = RemoteUser.create! name: 'Jorge'
-    2.times{|index| @remote_user.invoices.create number: 1, date: "2014-1-#{index}"}
+    2.times{|index| @remote_user.invoices.create! number: 1, date: "2014-1-#{index}"}
     Forceps::Remote::User.find(@remote_user.id).copy_to_local
 
     copied_user = User.find_by_name('Jorge')
