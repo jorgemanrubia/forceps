@@ -24,9 +24,7 @@ class SimpleStructuresTest < ActiveSupport::TestCase
   end
 
   test "should download a record with associated objects via 'has_one'" do
-    remote_address = RemoteAddress.create!(street: 'Uria', city: 'Oviedo', country: 'Spain')
-    @remote_user.address = remote_address
-    @remote_user.save!
+    remote_address = RemoteAddress.create!(street: 'Uria', city: 'Oviedo', country: 'Spain', user: @remote_user)
 
     Forceps::Remote::User.find(@remote_user).copy_to_local
     copied_user = User.find_by_name('Jorge')
