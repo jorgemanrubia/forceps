@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SimpleTest < ActiveSupport::TestCase
+class SimpleStructuresTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = false
 
   def setup
