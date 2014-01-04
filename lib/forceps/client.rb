@@ -49,11 +49,11 @@ module Forceps
     def make_associations_reference_remote_classes_for(remote_class)
       remote_class.reflect_on_all_associations.each do |association|
         next if association.klass.name =~ /Forceps::Remote/
-        reference_remote_classes(association)
+        reference_remote_class(association)
       end
     end
 
-    def reference_remote_classes(association)
+    def reference_remote_class(association)
       related_remote_class = remote_class_for(association.klass.name)
       association.instance_variable_set("@klass", related_remote_class)
     end
