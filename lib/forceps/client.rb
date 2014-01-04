@@ -7,6 +7,8 @@ module Forceps
 
       declare_remote_model_classes
       make_associations_reference_remote_classes
+
+      Forceps.logger.debug "Classes handled by Forceps: #{model_classes.collect(&:name).inspect}"
     end
 
     private
