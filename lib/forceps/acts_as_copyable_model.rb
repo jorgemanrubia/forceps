@@ -132,9 +132,9 @@ module Forceps
       def copy_associated_objects_in_has_and_belongs_to_many(local_object, remote_object, association_name)
         remote_object.send(association_name).find_each do |remote_associated_object|
           # Dirty way to avoid copying objects related by has_and_belong_to_many in both extremes twice
-          cloned_remote_associated_object = copy(remote_associated_object)
-          unless local_object.send(association_name).where(id: cloned_remote_associated_object.id).exists?
-            local_object.send(association_name) << cloned_remote_associated_object
+          cloned_local_associated_object = copy(remote_associated_object)
+          unless local_object.send(association_name).where(id: cloned_local_associated_object.id).exists?
+            local_object.send(association_name) << cloned_local_associated_object
           end
         end
       end
