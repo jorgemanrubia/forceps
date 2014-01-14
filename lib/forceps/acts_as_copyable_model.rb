@@ -22,11 +22,12 @@ module Forceps
     end
 
     class DeepCopier
-      attr_accessor :copied_remote_objects, :options
+      attr_accessor :copied_remote_objects, :options, :level
 
       def initialize(options)
         @copied_remote_objects = {}
         @options = options
+        @level = 0
       end
 
       def copy(remote_object)
@@ -48,8 +49,10 @@ module Forceps
 
       def local_copy_with_simple_attributes(remote_object)
         if should_reuse_local_copy?(remote_object)
+          debug "#{as_trace(remote_object)} reusing..."
           find_local_copy_with_simple_attributes(remote_object)
         else
+          debug "#{as_trace(remote_object)} copying..."
           create_local_copy_with_simple_attributes(remote_object)
         end
       end
@@ -72,11 +75,36 @@ module Forceps
         remote_object.class.base_class.create!(remote_object.attributes.except('id'))
       end
 
+      def logger
+        Forceps.logger
+      end
+
+      def increase_level
+        @level += 1
+      end
+
+      def decrease_level
+        @level -= 1
+      end
+
+      def as_trace(remote_object)
+        "<#{remote_object.class.base_class.name} - #{remote_object.id}>"
+      end
+
+      def debug(message)
+        left_margin = "  "*level
+        logger.debug "#{left_margin}#{message}"
+      end
+
       def copy_associated_objects(local_object, remote_object)
+        increase_level
+
         copy_objects_associated_by_association_kind(local_object, remote_object, :has_many)
         copy_objects_associated_by_association_kind(local_object, remote_object, :has_one)
         copy_objects_associated_by_association_kind(local_object, remote_object, :belongs_to)
         copy_objects_associated_by_association_kind(local_object, remote_object, :has_and_belongs_to_many)
+
+        decrease_level
       end
 
       def copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
@@ -102,7 +130,6 @@ module Forceps
       end
 
       def copy_associated_objects_in_has_and_belongs_to_many(local_object, remote_object, association_name)
-        puts "Se llama!"
         copy_associated_objects_in_has_many local_object, remote_object, association_name
       end
     end
