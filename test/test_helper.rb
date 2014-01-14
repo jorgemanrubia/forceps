@@ -17,7 +17,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 # Load fixtures from the engine
 ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
-
+ActiveSupport::TestCase.use_transactional_fixtures = false
 
 DatabaseCleaner::ActiveRecord.config_file_location = File.expand_path("../dummy/config/database.yml", __FILE__)
 

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class CloneStructuresTest < ActiveSupport::TestCase
-  self.use_transactional_fixtures = false
 
   def setup
     @remote_invoice = RemoteInvoice.create! number: 123, date: Time.now
