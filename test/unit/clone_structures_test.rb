@@ -39,10 +39,14 @@ class CloneStructuresTest < ActiveSupport::TestCase
 
     Forceps::Remote::Tag.find(remote_tags[0]).copy_to_local
 
-    assert_equal Product.count, 2
-    assert_equal Tag.count, 2
+    assert_equal 2, Product.count
+    assert_equal 2, Tag.count
 
-
+    2.times do |index|
+      assert_not_nil tag = Tag.find_by_name("tag #{index}")
+      assert_not_nil Product.find_by_name("product #{index}")
+      assert_equal 2, tag.products.count
+    end
   end
 
   test "should download object with 'has_one'" do
