@@ -76,6 +76,7 @@ module Forceps
         copy_objects_associated_by_association_kind(local_object, remote_object, :has_many)
         copy_objects_associated_by_association_kind(local_object, remote_object, :has_one)
         copy_objects_associated_by_association_kind(local_object, remote_object, :belongs_to)
+        copy_objects_associated_by_association_kind(local_object, remote_object, :has_and_belongs_to_many)
       end
 
       def copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
@@ -98,6 +99,11 @@ module Forceps
 
       def copy_associated_objects_in_belongs_to(local_object, remote_object, association_name)
         copy_associated_objects_in_has_one local_object, remote_object, association_name
+      end
+
+      def copy_associated_objects_in_has_and_belongs_to_many(local_object, remote_object, association_name)
+        puts "Se llama!"
+        copy_associated_objects_in_has_many local_object, remote_object, association_name
       end
     end
   end

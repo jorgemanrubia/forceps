@@ -20,7 +20,7 @@ class CloneStructuresTest < ActiveSupport::TestCase
 
     copied_user = User.find_by_name('Jorge')
     assert_identical @remote_user, copied_user
-    2.times { |index| assert_identical @remote_user.invoices[index], copied_user.invoices[index]}
+    2.times { |index| assert_identical @remote_user.invoices[index], copied_user.invoices[index] }
   end
 
   test "should download object with 'belongs_to'" do
@@ -30,6 +30,17 @@ class CloneStructuresTest < ActiveSupport::TestCase
 
     copied_invoice = Invoice.find_by_number(1234)
     assert_identical @remote_invoice, copied_invoice
+  end
+
+  test "should download obects with 'has_and_belongs_to_many'" do
+    remote_tags = 2.times.collect { |index| RemoteTag.create name: "tag #{index}" }
+    remote_products = 2.times.collect { |index| RemoteProduct.create name: "product #{index}" }
+    remote_products.each { |remote_product| remote_tags.each {|remote_tag| remote_product.tags << remote_tag} }
+
+    Forceps::Remote::Tag.find(remote_tags[0]).copy_to_local
+
+    assert_equal Product.count, 2
+    assert_equal Tag.count, 2
   end
 
   test "should download object with 'has_one'" do
