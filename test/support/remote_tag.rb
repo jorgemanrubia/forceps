@@ -2,7 +2,9 @@ class RemoteTag < Product
   establish_connection 'remote'
 
   has_many :line_items, class_name: 'RemoteLineItem'
-  has_and_belongs_to_many :products, class_name: 'RemoteProduct'
+  has_and_belongs_to_many :products, class_name: 'RemoteProduct', join_table: 'products_tags', foreign_key: 'tag_id', association_foreign_key: 'product_id'
+
+
 end
 
 
