@@ -69,7 +69,7 @@ module Forceps
           copy_simple_attributes(found_local_object, remote_object)
           found_local_object
         else
-          raise "pending..."
+          create_local_copy_with_simple_attributes(remote_object)
         end
       end
 
