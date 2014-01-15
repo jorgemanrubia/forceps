@@ -49,10 +49,8 @@ module Forceps
 
       def local_copy_with_simple_attributes(remote_object)
         if should_reuse_local_copy?(remote_object)
-          debug "#{as_trace(remote_object)} reusing..."
           find_or_clone_local_copy_with_simple_attributes(remote_object)
         else
-          debug "#{as_trace(remote_object)} copying..."
           create_local_copy_with_simple_attributes(remote_object)
         end
       end
@@ -95,6 +93,7 @@ module Forceps
       def create_local_copy_with_simple_attributes(remote_object)
         # 'self.dup.becomes(Invoice)' won't work because of different  AR connections.
         # todo: prepare for rails 3 and attribute protection
+        debug "#{as_trace(remote_object)} copying..."
         remote_object.class.base_class.create!(simple_attributes_to_copy(remote_object))
       end
 
@@ -103,6 +102,7 @@ module Forceps
       end
 
       def copy_simple_attributes(target_local_object, source_remote_object)
+        debug "#{as_trace(source_remote_object)} reusing..."
         target_local_object.update_attributes!(simple_attributes_to_copy(source_remote_object))
       end
 
