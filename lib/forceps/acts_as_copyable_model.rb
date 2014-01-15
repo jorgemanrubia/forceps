@@ -58,15 +58,28 @@ module Forceps
       end
 
       def should_reuse_local_copy?(remote_object)
-        classes_to_reuse.include?(remote_object.class.base_class)
+        finders_for_reusing_classes.include?(remote_object.class.base_class)
       end
 
-      def classes_to_reuse
-        options[:reuse] || []
+      def finders_for_reusing_classes
+        options[:reuse] || {}
       end
 
       def find_local_copy_with_simple_attributes(remote_object)
-        remote_object.class.base_class.find(remote_object.id)
+        finder_for_remote_object(remote_object).call(remote_object)
+      end
+
+      def finder_for_remote_object(remote_object)
+        finder = finders_for_reusing_classes[remote_object.class.base_class]
+        finder = build_attribute_finder(remote_object, finder) if finder.is_a? Symbol
+        finder
+      end
+
+      def build_attribute_finder(remote_object, attribute_name)
+        value = remote_object.send(attribute_name)
+        lambda do |object|
+          object.class.where(attribute_name => value).first
+        end
       end
 
       def create_local_copy_with_simple_attributes(remote_object)
