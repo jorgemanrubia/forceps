@@ -50,7 +50,7 @@ module Forceps
       def local_copy_with_simple_attributes(remote_object)
         if should_reuse_local_copy?(remote_object)
           debug "#{as_trace(remote_object)} reusing..."
-          find_local_copy_with_simple_attributes(remote_object)
+          find_or_clone_local_copy_with_simple_attributes(remote_object)
         else
           debug "#{as_trace(remote_object)} copying..."
           create_local_copy_with_simple_attributes(remote_object)
@@ -63,6 +63,16 @@ module Forceps
 
       def finders_for_reusing_classes
         options[:reuse] || {}
+      end
+
+      def find_or_clone_local_copy_with_simple_attributes(remote_object)
+        found_local_object = finder_for_remote_object(remote_object).call(remote_object)
+        if found_local_object
+          copy_simple_attributes(found_local_object, remote_object)
+          found_local_object
+        else
+          raise "pending..."
+        end
       end
 
       def find_local_copy_with_simple_attributes(remote_object)
@@ -78,14 +88,22 @@ module Forceps
       def build_attribute_finder(remote_object, attribute_name)
         value = remote_object.send(attribute_name)
         lambda do |object|
-          object.class.where(attribute_name => value).first
+          object.class.base_class.where(attribute_name => value).first
         end
       end
 
       def create_local_copy_with_simple_attributes(remote_object)
         # 'self.dup.becomes(Invoice)' won't work because of different  AR connections.
         # todo: prepare for rails 3 and attribute protection
-        remote_object.class.base_class.create!(remote_object.attributes.except('id'))
+        remote_object.class.base_class.create!(simple_attributes_to_copy(remote_object))
+      end
+
+      def simple_attributes_to_copy(remote_object)
+        remote_object.attributes.except('id')
+      end
+
+      def copy_simple_attributes(target_local_object, source_remote_object)
+        target_local_object.update_attributes!(simple_attributes_to_copy(source_remote_object))
       end
 
       def logger
