@@ -132,7 +132,9 @@ module Forceps
 
       def copy_simple_attributes(target_local_object, source_remote_object)
         debug "#{as_trace(source_remote_object)} reusing..."
-        target_local_object.update_columns(simple_attributes_to_copy(source_remote_object))
+        # update_columns skips callbacks too but not available in Rails 3
+        copy_attributes(target_local_object, simple_attributes_to_copy(source_remote_object))
+        target_local_object.save!(validate: false)
       end
 
       def logger
