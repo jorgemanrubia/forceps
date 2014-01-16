@@ -50,7 +50,7 @@ module Forceps
       remote_class_for(class_name).establish_connection 'remote'
     end
 
-    def last_class_name(class_name)
+    def remote_class_name(class_name)
 	    class_name.split('::').last
     end
 
