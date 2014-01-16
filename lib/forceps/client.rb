@@ -40,7 +40,7 @@ module Forceps
     end
 
     def declare_remote_model_class(klass)
-      class_name = last_class_name(klass.name)
+      class_name = remote_class_name_for(klass.name)
 
       new_class = Class.new(klass) do
         table_name = class_name.tableize
@@ -50,12 +50,12 @@ module Forceps
       remote_class_for(class_name).establish_connection 'remote'
     end
 
-    def remote_class_name(class_name)
-	    class_name.split('::').last
+    def remote_class_name_for(local_class_name)
+      local_class_name.gsub('::', '_')
     end
 
     def remote_class_for(class_name)
-      Forceps::Remote::const_get(last_class_name(class_name))
+      Forceps::Remote::const_get(remote_class_name_for(class_name))
     end
 
     def make_associations_reference_remote_classes
