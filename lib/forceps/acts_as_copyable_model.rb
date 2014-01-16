@@ -37,7 +37,9 @@ module Forceps
       private
 
       def cached_local_copy(remote_object)
-        copied_remote_objects[remote_object]
+        cached_object = copied_remote_objects[remote_object]
+        debug "#{as_trace(remote_object)} from cache..." if cached_object
+        cached_object
       end
 
       def perform_copy(remote_object)
@@ -124,7 +126,7 @@ module Forceps
       end
 
       def disable_all_callbacks_for(base_class)
-        [:create, :save, :update, :validate].each { |callback| base_class.reset_callbacks callback }
+        [:create, :save, :update, :validate, :touch].each { |callback| base_class.reset_callbacks callback }
       end
 
       def simple_attributes_to_copy(remote_object)
@@ -171,18 +173,22 @@ module Forceps
       end
 
       def copy_associated_objects(local_object, remote_object)
-        increase_level
-
-        [:has_many, :has_one, :belongs_to, :has_and_belongs_to_many].each do |association_kind|
-          copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
+        with_nested_logging do
+          [:has_many, :has_one, :belongs_to, :has_and_belongs_to_many].each do |association_kind|
+            copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
+          end
         end
+      end
 
+      def with_nested_logging
+        increase_level
+        yield
         decrease_level
       end
 
       def copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
         associations_to_copy(remote_object, association_kind).collect(&:name).each do |association_name|
-          debug "\t#{remote_object.class.base_class}-#{association_name}"
+          debug "#{association_name}"
           send "copy_associated_objects_in_#{association_kind}", local_object, remote_object, association_name
         end
       end
