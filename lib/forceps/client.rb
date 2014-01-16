@@ -44,6 +44,11 @@ module Forceps
 
       new_class = Class.new(klass) do
         table_name = class_name.tableize
+
+        # We don't want to include STI condition automatically (the base class extends the original one)
+        def self.finder_needs_type_condition?
+          false
+        end
       end
 
       Forceps::Remote.const_set(class_name, new_class)
