@@ -176,8 +176,9 @@ module Forceps
       end
 
       def associations_to_copy(remote_object, association_kind)
+        excluded_attributes = attributes_to_exclude(remote_object)
         remote_object.class.reflect_on_all_associations(association_kind).reject do |association|
-          association.options[:through] || attributes_to_exclude(remote_object).include?(association.name)
+          association.options[:through] || excluded_attributes.include?(:all_associations) || excluded_attributes.include?(association.name)
         end
       end
 
