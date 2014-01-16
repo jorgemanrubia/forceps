@@ -94,7 +94,25 @@ module Forceps
         # 'self.dup.becomes(Invoice)' won't work because of different  AR connections.
         # todo: prepare for rails 3 and attribute protection
         debug "#{as_trace(remote_object)} copying..."
-        remote_object.class.base_class.create!(simple_attributes_to_copy(remote_object))
+
+        base_class = remote_object.class.base_class
+        disable_all_callbacks_for(base_class)
+
+        cloned_object = base_class.new
+        copy_attributes(cloned_object, simple_attributes_to_copy(remote_object))
+        cloned_object.save!(validate: false)
+        cloned_object
+      end
+
+      # Using setters explicitly to avoid having to mess with disabling mass protection in Rails 3
+      def copy_attributes(target_object, attributes_map)
+        attributes_map.each do |attribute_name, attribute_value|
+          target_object.send("#{attribute_name}=", attribute_value)
+        end
+      end
+
+      def disable_all_callbacks_for(base_class)
+        [:create, :save, :update, :validate].each { |callback| base_class.reset_callbacks callback }
       end
 
       def simple_attributes_to_copy(remote_object)
@@ -103,7 +121,7 @@ module Forceps
 
       def copy_simple_attributes(target_local_object, source_remote_object)
         debug "#{as_trace(source_remote_object)} reusing..."
-        target_local_object.update_attributes!(simple_attributes_to_copy(source_remote_object))
+        target_local_object.update_columns(simple_attributes_to_copy(source_remote_object))
       end
 
       def logger
