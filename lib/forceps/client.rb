@@ -22,7 +22,15 @@ module Forceps
     end
 
     def model_classes
-      @model_classes ||= ActiveRecord::Base.descendants - [ActiveRecord::SchemaMigration]
+      @model_classes ||= ActiveRecord::Base.descendants - model_classes_to_exclude
+    end
+
+    def model_classes_to_exclude
+      if Rails::VERSION::MAJOR >= 4
+        [ActiveRecord::SchemaMigration]
+      else
+        []
+      end
     end
 
     def declare_remote_model_classes
@@ -32,7 +40,7 @@ module Forceps
     end
 
     def declare_remote_model_class(klass)
-      class_name = klass.name
+      class_name = klass.name.split('::').last
 
       new_class = Class.new(klass) do
         table_name = class_name.tableize
@@ -54,7 +62,7 @@ module Forceps
 
     def make_associations_reference_remote_classes_for(model_class)
       model_class.reflect_on_all_associations.each do |association|
-        next if association.klass.name =~ /Forceps::Remote/
+        next if association.klass.name =~ /Forceps::Remote/ rescue next
         reference_remote_class(model_class, association)
       end
     end
