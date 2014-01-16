@@ -116,7 +116,18 @@ module Forceps
       end
 
       def simple_attributes_to_copy(remote_object)
-        remote_object.attributes.except('id')
+        remote_object.attributes.except('id').reject do |attribute_name|
+          attributes_to_exclude(remote_object).include? attribute_name.to_sym
+        end
+      end
+
+      def attributes_to_exclude(remote_object)
+        @attributes_to_exclude_map ||= {}
+        @attributes_to_exclude_map[remote_object.class.base_class] ||= calculate_attributes_to_exclude(remote_object)
+      end
+
+      def calculate_attributes_to_exclude(remote_object)
+        ((options[:exclude] && options[:exclude][remote_object.class.base_class]) || []).collect(&:to_sym)
       end
 
       def copy_simple_attributes(target_local_object, source_remote_object)
