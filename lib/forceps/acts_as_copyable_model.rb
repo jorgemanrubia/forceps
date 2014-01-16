@@ -161,10 +161,9 @@ module Forceps
       def copy_associated_objects(local_object, remote_object)
         increase_level
 
-        copy_objects_associated_by_association_kind(local_object, remote_object, :has_many)
-        copy_objects_associated_by_association_kind(local_object, remote_object, :has_one)
-        copy_objects_associated_by_association_kind(local_object, remote_object, :belongs_to)
-        copy_objects_associated_by_association_kind(local_object, remote_object, :has_and_belongs_to_many)
+        [:has_many, :has_one, :belongs_to, :has_and_belongs_to_many].each do |association_kind|
+          copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
+        end
 
         decrease_level
       end
@@ -191,7 +190,7 @@ module Forceps
       def copy_associated_objects_in_has_one(local_object, remote_object, association_name)
         remote_associated_object = remote_object.send(association_name)
         local_object.send "#{association_name}=", remote_associated_object && copy(remote_associated_object)
-        local_object.save!
+        local_object.save!(validate: false)
       end
 
       def copy_associated_objects_in_belongs_to(local_object, remote_object, association_name)
