@@ -157,8 +157,14 @@ module Forceps
       end
 
       def copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
-        remote_object.class.reflect_on_all_associations(association_kind).collect(&:name).each do |association_name|
+        associations_to_copy(remote_object, association_kind).collect(&:name).each do |association_name|
           send "copy_associated_objects_in_#{association_kind}", local_object, remote_object, association_name
+        end
+      end
+
+      def associations_to_copy(remote_object, association_kind)
+        remote_object.class.reflect_on_all_associations(association_kind).reject do |association|
+          association.options[:through]
         end
       end
 
