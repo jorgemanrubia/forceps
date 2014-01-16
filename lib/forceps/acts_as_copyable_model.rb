@@ -95,13 +95,25 @@ module Forceps
         # todo: prepare for rails 3 and attribute protection
         debug "#{as_trace(remote_object)} copying..."
 
-        base_class = remote_object.class.base_class
+        # todo: pending test for STI scenario
+        base_class = base_local_class_for(remote_object)
+
         disable_all_callbacks_for(base_class)
 
         cloned_object = base_class.new
         copy_attributes(cloned_object, simple_attributes_to_copy(remote_object))
         cloned_object.save!(validate: false)
         cloned_object
+      end
+
+      def base_local_class_for(remote_object)
+        base_class = remote_object.class.base_class
+
+        if remote_object.respond_to?(:type)
+          base_class = remote_object.type.constantize rescue base_class
+        end
+
+        base_class
       end
 
       # Using setters explicitly to avoid having to mess with disabling mass protection in Rails 3
@@ -170,6 +182,7 @@ module Forceps
 
       def copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
         associations_to_copy(remote_object, association_kind).collect(&:name).each do |association_name|
+          debug "\t#{remote_object.class.base_class}-#{association_name}"
           send "copy_associated_objects_in_#{association_kind}", local_object, remote_object, association_name
         end
       end
