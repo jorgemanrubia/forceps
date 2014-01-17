@@ -58,4 +58,12 @@ class CloneStructuresTest < ActiveSupport::TestCase
     assert_identical remote_address, copied_user.address
   end
 
+  test "should download child objects when using single table inheritance" do
+    remote_car = RemoteProduct.create!(name: 'audi')
+    remote_car.update_column :type, 'Car'
+
+    Forceps::Remote::Product.find_by_name('audi').copy_to_local
+    assert_not_nil Product.find_by_name('CAR: audi')
+  end
+
 end
