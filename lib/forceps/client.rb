@@ -74,14 +74,27 @@ module Forceps
 
     def make_associations_reference_remote_classes_for(model_class)
       model_class.reflect_on_all_associations.each do |association|
-        next if association.klass.name =~ /Forceps::Remote/ rescue next
+        next if association.class_name =~ /Forceps::Remote/ rescue next
         reference_remote_class(model_class, association)
       end
     end
 
     def reference_remote_class(model_class, association)
-      related_remote_class = remote_class_for(association.klass.name)
       remote_model_class = remote_class_for(model_class.name)
+
+      if association.options[:polymorphic]
+        reference_remote_class_in_polymorfic_association(association, remote_model_class)
+      else
+        reference_remote_class_in_normal_association(association, remote_model_class)
+      end
+    end
+
+    def reference_remote_class_in_polymorfic_association(association, remote_model_class)
+      remote_model_class.send(:define_method, association.foreign_type) { "Forceps::Remote::#{super()}" }
+    end
+
+    def reference_remote_class_in_normal_association(association, remote_model_class)
+      related_remote_class = remote_class_for(association.klass.name)
 
       cloned_association = association.dup
       cloned_association.instance_variable_set("@klass", related_remote_class)
