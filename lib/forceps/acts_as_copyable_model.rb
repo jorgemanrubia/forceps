@@ -110,7 +110,6 @@ module Forceps
 
       def base_local_class_for(remote_object)
         base_class = remote_object.class.base_class
-
         if remote_object.respond_to?(:type)
           base_class = remote_object.type.constantize rescue base_class
         end

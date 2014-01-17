@@ -34,7 +34,11 @@ class CloneStructuresTest < ActiveSupport::TestCase
 
   test "should download objects with 'has_and_belongs_to_many'" do
     remote_tags = 2.times.collect { |index| RemoteTag.create name: "tag #{index}" }
-    remote_products = 2.times.collect { |index| RemoteProduct.create name: "product #{index}" }
+    remote_products = 2.times.collect do |index|
+      RemoteProduct.create(name: "product #{index}").tap do |product|
+        product.update_column :type, nil # we don't STI here
+      end
+    end
     remote_products.each { |remote_product| remote_tags.each {|remote_tag| remote_product.tags << remote_tag} }
 
     Forceps::Remote::Tag.find(remote_tags[0]).copy_to_local
