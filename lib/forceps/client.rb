@@ -90,6 +90,7 @@ module Forceps
     end
 
     def reference_remote_class_in_polymorfic_association(association, remote_model_class)
+      # todo: test
       remote_model_class.send(:define_method, association.foreign_type) { "Forceps::Remote::#{super()}" }
     end
 
