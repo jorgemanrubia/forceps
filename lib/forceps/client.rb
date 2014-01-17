@@ -91,7 +91,19 @@ module Forceps
 
     def reference_remote_class_in_polymorfic_association(association, remote_model_class)
       # todo: test
-      remote_model_class.send(:define_method, association.foreign_type) { "Forceps::Remote::#{super()}" }
+      foreign_type_attribute_name = association.foreign_type
+
+      remote_model_class.send(:define_method, association.foreign_type) do
+        "Forceps::Remote::#{super()}"
+      end
+
+      remote_model_class.send(:define_method, "[]") do |attribute_name|
+        if (attribute_name.to_s==foreign_type_attribute_name)
+          "Forceps::Remote::#{super(attribute_name)}"
+        else
+          super(attribute_name)
+        end
+      end
     end
 
     def reference_remote_class_in_normal_association(association, remote_model_class)
