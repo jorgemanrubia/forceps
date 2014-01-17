@@ -119,7 +119,7 @@ module Forceps
       # Using setters explicitly to avoid having to mess with disabling mass protection in Rails 3
       def copy_attributes(target_object, attributes_map)
         attributes_map.each do |attribute_name, attribute_value|
-          target_object.send("#{attribute_name}=", attribute_value) rescue logger.error("The method '#{attribute_name}=' does not exist. Different schemas in the remote and local databases?")
+          target_object.send("#{attribute_name}=", attribute_value) rescue debug("The method '#{attribute_name}=' does not exist. Different schemas in the remote and local databases?")
         end
       end
 
