@@ -113,7 +113,6 @@ module Forceps
         if remote_object.respond_to?(:type)
           base_class = remote_object.type.constantize rescue base_class
         end
-
         base_class
       end
 

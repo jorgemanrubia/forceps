@@ -2,9 +2,9 @@ require 'test_helper'
 
 class ReuseExistingRecordsTest < ActiveSupport::TestCase
   def setup
-    @remote_product = RemoteProduct.create name: 'MBP', price: '2000', id: 123456
-    @local_existing_product = Product.create id: @remote_product.id, name: 'MBP', price: '1000'
-    @remote_line_item = RemoteLineItem.create quantity: 3, product: @remote_product
+    @remote_product = RemoteProduct.create!(name: 'MBP', price: '2000', id: 123456).tap{|product| product.update_column :type, nil}
+    @local_existing_product = Product.create!(id: @remote_product.id, name: 'MBP', price: '1000')
+    @remote_line_item = RemoteLineItem.create! quantity: 3, product: @remote_product
   end
 
   test "should reuse the referenced project when specifying a matching attribute name" do
