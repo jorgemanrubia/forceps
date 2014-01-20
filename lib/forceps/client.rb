@@ -41,21 +41,23 @@ module Forceps
 
     def declare_remote_model_class(klass)
       class_name = remote_class_name_for(klass.name)
-
-      needs_type_condition = (klass.base_class != ActiveRecord::Base) && klass.finder_needs_type_condition?
-      new_class = Class.new(klass) do
-        table_name = class_name.tableize
-
-        # We don't want to include STI condition automatically (the base class extends the original one)
-        unless needs_type_condition
-          def self.finder_needs_type_condition?
-            false
-          end
-        end
-      end
-
+      new_class = build_new_remote_class klass, class_name
       Forceps::Remote.const_set(class_name, new_class)
       remote_class_for(class_name).establish_connection 'remote'
+    end
+
+    def build_new_remote_class(local_class, class_name)
+	    needs_type_condition = (local_class.base_class != ActiveRecord::Base) && local_class.finder_needs_type_condition?
+	    Class.new(local_class) do
+		    self.table_name = class_name.tableize
+
+		    # We don't want to include STI condition automatically (the base class extends the original one)
+		    unless needs_type_condition
+			    def self.finder_needs_type_condition?
+				    false
+			    end
+		    end
+	    end
     end
 
     def remote_class_name_for(local_class_name)
