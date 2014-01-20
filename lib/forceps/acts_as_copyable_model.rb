@@ -111,7 +111,7 @@ module Forceps
         cloned_object = base_class.new
         copy_attributes(cloned_object, simple_attributes_to_copy(remote_object))
         cloned_object.save!(validate: false)
-        invoke_callbacks(:after_each, cloned_object)
+        invoke_callbacks(:after_each, cloned_object, remote_object)
         cloned_object
       end
 
@@ -123,10 +123,10 @@ module Forceps
         base_class
       end
 
-      def invoke_callbacks(callback_name, copied_object)
+      def invoke_callbacks(callback_name, copied_object, remote_object)
         callback = callbacks_for(callback_name)[copied_object.class]
         return unless callback
-        callback.call(copied_object)
+        callback.call(copied_object, remote_object)
       end
 
       def callbacks_for(callback_name)
