@@ -7,6 +7,7 @@ require 'database_cleaner'
 require 'database_cleaner/active_record/base'
 require 'awesome_print'
 require 'minitest/reporters'
+require 'minitest/mock'
 
 MiniTest::Reporters.use!
 

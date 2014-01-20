@@ -111,6 +111,7 @@ module Forceps
         cloned_object = base_class.new
         copy_attributes(cloned_object, simple_attributes_to_copy(remote_object))
         cloned_object.save!(validate: false)
+        invoke_callbacks(:after_each, cloned_object)
         cloned_object
       end
 
@@ -120,6 +121,16 @@ module Forceps
           base_class = remote_object.type.constantize rescue base_class
         end
         base_class
+      end
+
+      def invoke_callbacks(callback_name, copied_object)
+        callback = callbacks_for(callback_name)[copied_object.class]
+        return unless callback
+        callback.call(copied_object)
+      end
+
+      def callbacks_for(callback_name)
+        options[callback_name] || {}
       end
 
       # Using setters explicitly to avoid having to mess with disabling mass protection in Rails 3
