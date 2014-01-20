@@ -22,10 +22,11 @@ module Forceps
     end
 
     class DeepCopier
-      attr_accessor :copied_remote_objects, :options, :level
+      attr_accessor :copied_remote_objects, :options, :level, :reused_local_objects
 
       def initialize(options)
         @copied_remote_objects = {}
+        @reused_local_objects = Set.new
         @options = options
         @level = 0
       end
@@ -45,7 +46,7 @@ module Forceps
       def perform_copy(remote_object)
         copied_object = local_copy_with_simple_attributes(remote_object)
         copied_remote_objects[remote_object] = copied_object
-        copy_associated_objects(copied_object, remote_object)
+        copy_associated_objects(copied_object, remote_object) unless was_reused?(copied_object)
         copied_object
       end
 
@@ -69,10 +70,15 @@ module Forceps
         found_local_object = finder_for_remote_object(remote_object).call(remote_object)
         if found_local_object
           copy_simple_attributes(found_local_object, remote_object)
+          reused_local_objects << found_local_object
           found_local_object
         else
           create_local_copy_with_simple_attributes(remote_object)
         end
+      end
+
+      def was_reused?(local_object)
+        reused_local_objects.include? local_object
       end
 
       def find_local_copy_with_simple_attributes(remote_object)
