@@ -49,7 +49,7 @@ module Forceps
     def build_new_remote_class(local_class, class_name)
 	    needs_type_condition = (local_class.base_class != ActiveRecord::Base) && local_class.finder_needs_type_condition?
 	    Class.new(local_class) do
-		    self.table_name = class_name.tableize
+		    self.table_name = local_class.table_name
 
 		    # We don't want to include STI condition automatically (the base class extends the original one)
 		    unless needs_type_condition
