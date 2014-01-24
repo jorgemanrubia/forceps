@@ -48,7 +48,7 @@ class Invoice < ActiveRecord::Base
 end
 ```
 
-You use the generated class to download a given invoice:
+You can use the generated class to download some invoice:
 
 ```ruby
 Forceps::Remote::Invoice.find(1234).copy_to_local
