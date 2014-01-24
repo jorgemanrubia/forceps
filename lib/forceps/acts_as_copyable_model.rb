@@ -243,4 +243,3 @@ module Forceps
   end
 end
 
-ActiveRecord::Base.send :include, Forceps::ActsAsCopyableModel
