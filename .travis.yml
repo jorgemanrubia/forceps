@@ -2,11 +2,12 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
-script:
+before_script:
   - cd test/dummy
   - rake db:test:prepare
   - RAILS_ENV=remote rake db:create db:migrate
-
+script:
+  - rake test
 
 
 
