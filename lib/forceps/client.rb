@@ -47,19 +47,19 @@ module Forceps
     end
 
     def build_new_remote_class(local_class, class_name)
-	    needs_type_condition = (local_class.base_class != ActiveRecord::Base) && local_class.finder_needs_type_condition?
-	    Class.new(local_class) do
-		    self.table_name = local_class.table_name
+      needs_type_condition = (local_class.base_class != ActiveRecord::Base) && local_class.finder_needs_type_condition?
+      Class.new(local_class) do
+        self.table_name = local_class.table_name
 
         include Forceps::ActsAsCopyableModel
 
         # We don't want to include STI condition automatically (the base class extends the original one)
-		    unless needs_type_condition
-			    def self.finder_needs_type_condition?
-				    false
-			    end
-		    end
-	    end
+        unless needs_type_condition
+          def self.finder_needs_type_condition?
+            false
+          end
+        end
+      end
     end
 
     def remote_class_name_for(local_class_name)
