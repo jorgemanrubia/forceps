@@ -100,7 +100,6 @@ module Forceps
 
       def create_local_copy_with_simple_attributes(remote_object)
         # 'self.dup.becomes(Invoice)' won't work because of different  AR connections.
-        # todo: prepare for rails 3 and attribute protection
         debug "#{as_trace(remote_object)} copying..."
 
         # todo: pending test for STI scenario
