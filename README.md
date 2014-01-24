@@ -99,7 +99,7 @@ invoice 1
 			line item 4
 			line item 5
 ```
-The option `:exclude` lets you specify which associations you are not interested in:
+The option `exclude` lets you specify which associations you are not interested in:
 
 ```ruby
 Forceps.configure exclude: {Product => [:line_items]}
@@ -117,7 +117,7 @@ class Product < ActiveRecord::Base
 end
 ```
 
-What about if the tags are reused across all the products in your database? For situations like this you can use the `:reuse` option.
+What about if the tags are reused across all the products in your database? For situations like this you can use the `reuse` option.
 
 It can be used providing the name of a column that can be used to find the object:
 
