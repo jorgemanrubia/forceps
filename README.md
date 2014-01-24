@@ -149,7 +149,7 @@ Forceps.configure after_each: {
 
 ### Rails and lazy loading
 
-In development Rails loads classes lazily, when they are used. Forceps will only know how to handle those classes defined when `Forceps.configure` is executed. You can make sure all the Rails models are loaded before executing `Forceps.configure` with:
+In development Rails loads classes lazily, when they are used. Forceps will only know how to handle those classes defined when `Forceps.configure` is executed. You can make sure that all the Rails models are loaded before executing `Forceps.configure` with:
 
 ```ruby
 Rails.application.eager_load! 
