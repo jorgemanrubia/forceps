@@ -155,7 +155,6 @@ Rails 3 and 4
 
 - If you are going to use this with a production database, it is recommended to use a read-only connection. Forceps will never modify the remote data but prevention is definitely better than cure when it comes to production data.
 - Thanks to [bandzoogle](http://bandzoogle.com) for supporting the development of this project.
-- The project is still at an early development stage.
 
 Pull requests are welcomed!
 
