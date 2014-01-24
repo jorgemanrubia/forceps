@@ -2,7 +2,7 @@
 
 Have you ever needed to copy a given user from a production database into your local box in order to debug some obscure bug? 
 
-Forceps lets you copy related models from one database into another. The source and target databases must support an active record connection. Typically, your source database is a remote production database and your target database is a local development one. The terms _local_ and _remote_ appears with this usage in mind thorough the API and code.
+Forceps lets you copy related models from one database into another. The source and target databases must support an active record connection. Typically, your source database is a remote production database and your target database is a local development one. The terms _local_ and _remote_ appear with this meaning in mind thorough the API and code.
 
 ## Installing
 
@@ -154,6 +154,32 @@ In development Rails loads classes lazily, when they are used. Forceps will only
 ```ruby
 Rails.application.eager_load! 
 ```
+
+### Using the generated remote classes
+
+When you invoke `Forceps.configure`, for each model class it will define an equivalent class in the namespace `Forceps::Remote`. These remote classes will be identical to the original ones with 2 differences:
+
+- They keep a connection with the remote database, instead of the connection defined by the current Rails environment.
+- Their associations are modified to reference the corresponding remote classes.
+
+These remote classes can be very handy if you want to prepare scripts that do something with your production data.
+
+```ruby
+class Invoice < ActiveRecord::Base
+  has_many :line_items
+end
+
+class LineItem < ActiveRecord::Base
+	belongs_to :invoice
+end
+
+...
+
+Forceps::Remote::Invoice.count # the number of invoices in the remote database
+invoice = Forceps::Remote::Invoice.find(1234)
+invoice.line_items.last.class # Forceps::Remote::LineItem
+```
+
 
 ## Compatibility
 
