@@ -1,6 +1,6 @@
 # Forceps
 
-Have you ever needed to copy a given user from a production database into your local database in order to debug some obscure bug? 
+Have you ever needed to copy a given user from a production database into your local box in order to debug some obscure bug? 
 
 Forceps lets you copy related models from one database into another. The source and target databases must support an active record connection. Typically, your source database is a remote production database and your target database is a local development one. The terms _local_ and _remote_ appears with this usage in mind thorough the API and code.
 
