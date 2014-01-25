@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    forceps (0.5.0)
+    forceps (0.6.0)
       logging (~> 1.6.2)
       rails (> 3.2.0)
 
