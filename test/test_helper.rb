@@ -25,6 +25,8 @@ DatabaseCleaner::ActiveRecord.config_file_location = File.expand_path("../dummy/
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner[:active_record, connection: :remote].strategy = :truncation
 
+Rails.application.eager_load!
+
 class ActiveSupport::TestCase
   setup do
     DatabaseCleaner.start

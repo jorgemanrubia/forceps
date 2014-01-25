@@ -53,6 +53,13 @@ module Forceps
 
         include Forceps::ActsAsCopyableModel
 
+        def self.instantiate(record, column_types = {})
+          if record[inheritance_column].present?
+            record[inheritance_column] = "Forceps::Remote::#{record[inheritance_column]}"
+          end
+          super
+        end
+
         # We don't want to include STI condition automatically (the base class extends the original one)
         unless needs_type_condition
           def self.finder_needs_type_condition?
