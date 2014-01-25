@@ -53,6 +53,7 @@ module Forceps
 
         include Forceps::ActsAsCopyableModel
 
+        # Intercep intantiation of records to make the 'type' column point to the corresponding remote class
         def self.instantiate(record, column_types = {})
           if record[inheritance_column].present?
             record[inheritance_column] = "Forceps::Remote::#{record[inheritance_column]}"
