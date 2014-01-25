@@ -67,7 +67,7 @@ module Forceps
           end
         end
 
-        def self.__prepare_sti_column_for_forceps(record)
+        def self.__make_sti_column_point_to_forceps_remote_class(record)
           if record[inheritance_column].present?
             record[inheritance_column] = "Forceps::Remote::#{record[inheritance_column]}"
           end
