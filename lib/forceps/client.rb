@@ -54,11 +54,23 @@ module Forceps
         include Forceps::ActsAsCopyableModel
 
         # Intercep intantiation of records to make the 'type' column point to the corresponding remote class
-        def self.instantiate(record, column_types = {})
+
+        if Rails::VERSION::MAJOR >= 4
+          def self.instantiate(record, column_types = {})
+            __prepare_sti_column_for_forceps(record)
+            super
+          end
+        else
+          def self.instantiate(record)
+            __prepare_sti_column_for_forceps(record)
+            super
+          end
+        end
+
+        def self.__prepare_sti_column_for_forceps(record)
           if record[inheritance_column].present?
             record[inheritance_column] = "Forceps::Remote::#{record[inheritance_column]}"
           end
-          super
         end
 
         # We don't want to include STI condition automatically (the base class extends the original one)
