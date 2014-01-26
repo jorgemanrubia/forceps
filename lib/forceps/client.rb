@@ -57,12 +57,12 @@ module Forceps
 
         if Rails::VERSION::MAJOR >= 4
           def self.instantiate(record, column_types = {})
-            __prepare_sti_column_for_forceps(record)
+            __make_sti_column_point_to_forceps_remote_class(record)
             super
           end
         else
           def self.instantiate(record)
-            __prepare_sti_column_for_forceps(record)
+            __make_sti_column_point_to_forceps_remote_class(record)
             super
           end
         end
