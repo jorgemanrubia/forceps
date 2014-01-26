@@ -116,11 +116,19 @@ module Forceps
 
       def base_local_class_for(remote_object)
         base_class = remote_object.class.base_class
-        if remote_object.respond_to?(:type) && remote_object.type.present?
-          local_type = remote_object.type.gsub('Forceps::Remote', '')
+        if has_sti_column?(remote_object)
+          local_type = to_local_class_name(remote_object.type)
           base_class = local_type.constantize rescue base_class
         end
         base_class
+      end
+
+      def to_local_class_name(remote_class_name)
+        remote_class_name.gsub('Forceps::Remote', '')
+      end
+
+      def has_sti_column?(object)
+        object.respond_to?(:type) && object.type.present? && object.type.is_a?(String)
       end
 
       def invoke_callbacks(callback_name, copied_object, remote_object)
@@ -135,8 +143,16 @@ module Forceps
 
       # Using setters explicitly to avoid having to mess with disabling mass protection in Rails 3
       def copy_attributes(target_object, attributes_map)
+        make_type_attribute_point_to_local_class_if_needed(attributes_map)
+
         attributes_map.each do |attribute_name, attribute_value|
           target_object.send("#{attribute_name}=", attribute_value) rescue debug("The method '#{attribute_name}=' does not exist. Different schemas in the remote and local databases?")
+        end
+      end
+
+      def make_type_attribute_point_to_local_class_if_needed(attributes_map)
+        if attributes_map['type'].is_a?(String)
+          attributes_map['type'] = to_local_class_name(attributes_map['type'])
         end
       end
 
