@@ -137,7 +137,7 @@ When a `reuse` option is provided but the model can't be found locally, it will 
 
 #### Callbacks
 
-You can configure callbacks that will be invoked after each object is copied. You can use these callbacks to perform additional operations that are needed to perform the copy. For example: to copy S3 assets:
+You can configure callbacks that will be invoked after each object is copied. You can use these callbacks to perform additional operations that are needed to perform the copy. For example: copying S3 assets:
 
 ```ruby
 Forceps.configure after_each: {
