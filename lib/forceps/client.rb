@@ -54,7 +54,6 @@ module Forceps
         include Forceps::ActsAsCopyableModel
 
         # Intercep intantiation of records to make the 'type' column point to the corresponding remote class
-
         if Rails::VERSION::MAJOR >= 4
           def self.instantiate(record, column_types = {})
             __make_sti_column_point_to_forceps_remote_class(record)
