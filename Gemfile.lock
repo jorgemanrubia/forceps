@@ -3,7 +3,7 @@ PATH
   specs:
     forceps (0.6.4)
       logging (~> 1.6.2)
-      rails (~> 3.2.14)
+      rails (> 3.2.0)
 
 GEM
   remote: https://rubygems.org/
