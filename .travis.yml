@@ -7,7 +7,7 @@ rvm:
   - 2.0.0
 before_script:
   - cd test/dummy
-  - RAILS_ENV=remote rake db:create db:migrate
+  - RAILS_ENV=test rake db:create db:migrate
   - RAILS_ENV=remote rake db:create db:migrate
 script:
   - rake test
