@@ -1,6 +1,5 @@
 language: ruby
 env:
-  - RAILS_ENV=test
   - "RAILS_VERSION=3.2.0"
   - "RAILS_VERSION=4.0.2"
 rvm:
@@ -8,7 +7,7 @@ rvm:
   - 2.0.0
 before_script:
   - cd test/dummy
-  - rake db:create db:migrate
+  - RAILS_ENV=remote rake db:create db:migrate
   - RAILS_ENV=remote rake db:create db:migrate
 script:
   - rake test
