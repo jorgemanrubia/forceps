@@ -35,7 +35,7 @@ GEM
     ansi (1.4.3)
     arel (4.0.1)
     atomic (1.1.14)
-    awesome_print (1.1.0)
+    awesome_print (1.2.0)
     builder (3.1.4)
     database_cleaner (1.2.0)
     erubis (2.7.0)
@@ -50,12 +50,12 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.25.1)
     minitest (4.7.5)
-    minitest-reporters (0.14.23)
+    minitest-reporters (0.14.24)
       ansi
       builder
       minitest (>= 2.12, < 5.0)
       powerbar
-    multi_json (1.8.2)
+    multi_json (1.8.4)
     polyglot (0.3.3)
     powerbar (1.0.11)
       ansi (~> 1.4.0)
