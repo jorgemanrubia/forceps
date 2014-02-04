@@ -41,7 +41,7 @@ module Forceps
 
     def declare_remote_model_class(klass)
       class_name = remote_class_name_for(klass.name)
-      new_class = build_new_remote_class klass, class_name
+      new_class = build_new_remote_class(klass, class_name)
       Forceps::Remote.const_set(class_name, new_class)
       remote_class_for(class_name).establish_connection 'remote'
     end
@@ -113,7 +113,6 @@ module Forceps
     end
 
     def reference_remote_class_in_polymorfic_association(association, remote_model_class)
-      # todo: test
       foreign_type_attribute_name = association.foreign_type
 
       remote_model_class.send(:define_method, association.foreign_type) do
