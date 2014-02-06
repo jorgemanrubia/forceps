@@ -180,7 +180,6 @@ invoice = Forceps::Remote::Invoice.find(1234)
 invoice.line_items.last.class # Forceps::Remote::LineItem
 ```
 
-
 ## Compatibility
 
 Rails 3 and 4
@@ -190,5 +189,6 @@ Rails 3 and 4
 - It is recommended to use a read-only connection for production databases. Forceps will never modify remote objects when copying them but prevention is definitely better than cure when it comes to production data.
 - Thanks to [bandzoogle](http://bandzoogle.com) for supporting the development of this project.
 
-Pull requests are welcomed!
+Pull requests are welcomed! [Overview of how forceps works internally](http://jorgemanrubia.net/2014/02/04/forceps-import-models-from-remote-databases/).
+
 
