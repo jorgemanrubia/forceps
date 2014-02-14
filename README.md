@@ -29,7 +29,7 @@ remote:
   encoding: utf8
 ```
 
-The low level connection mechanism doesn't matter thanks to Active Record. For example, this gem has been tested on [MySQL tunneled over SSH](http://chxo.com/be2/20040511_5667.html) and [on Heroku using the Postgres credentials](https://devcenter.heroku.com/articles/heroku-postgresql#pg-credentials).
+The low level connection mechanism doesn't matter thanks to Active Record. For example, this gem has been tested on [MySQL tunneled over SSH](http://chxo.com/be2/20040511_5667.html) and [on Heroku using Postgres credentials](https://devcenter.heroku.com/articles/heroku-postgresql#pg-credentials).
 
 ### Copy models
 
@@ -54,7 +54,7 @@ You can use the generated class to download some invoice:
 Forceps::Remote::Invoice.find(1234).copy_to_local
 ```
 
-By default, Forceps will:
+By default, Forceps will:c
 
 1. Create a new local object copying all the attributes of the remote object
 2. Explore all the associations of the remote object, and copy the related objects applying (1)
