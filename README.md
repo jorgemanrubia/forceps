@@ -141,7 +141,7 @@ You can configure callbacks that will be invoked after each object is copied. Yo
 
 ```ruby
 Forceps.configure after_each: {
-	Invoice => lambda do |local_upload, remote_upload|
+	Invoice => lambda do |local_invoice, remote_invoice|
 		...
 	end
 }
