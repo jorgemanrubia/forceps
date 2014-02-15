@@ -54,7 +54,7 @@ You can use the generated class to download some invoice:
 Forceps::Remote::Invoice.find(1234).copy_to_local
 ```
 
-By default, Forceps will:c
+By default, Forceps will:
 
 1. Create a new local object copying all the attributes of the remote object
 2. Explore all the associations of the remote object, and copy the related objects applying (1)
