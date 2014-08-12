@@ -40,13 +40,22 @@ module Forceps
     end
 
     def declare_remote_model_class(klass)
-      class_name = remote_class_name_for(klass.name)
-      new_class = build_new_remote_class(klass, class_name)
-      Forceps::Remote.const_set(class_name, new_class)
-      remote_class_for(class_name).establish_connection 'remote'
+      full_class_name = klass.name
+      head = Forceps::Remote
+
+      path = full_class_name.split("::")
+      class_name = path.pop
+
+      path.each do |module_name|
+        mod = Module.new
+        head = head.const_set(module_name, mod)
+      end
+      head.const_set(class_name, build_new_remote_class(klass))
+
+      remote_class_for(full_class_name).establish_connection 'remote'
     end
 
-    def build_new_remote_class(local_class, class_name)
+    def build_new_remote_class(local_class)
       needs_type_condition = (local_class.base_class != ActiveRecord::Base) && local_class.finder_needs_type_condition?
       Class.new(local_class) do
         self.table_name = local_class.table_name
@@ -81,12 +90,12 @@ module Forceps
       end
     end
 
-    def remote_class_name_for(local_class_name)
-      local_class_name.gsub('::', '_')
-    end
-
-    def remote_class_for(class_name)
-      Forceps::Remote::const_get(remote_class_name_for(class_name))
+    def remote_class_for(full_class_name)
+      head = Forceps::Remote
+      full_class_name.split("::").each do |mod|
+        head = head.const_get(mod)
+      end
+      head
     end
 
     def make_associations_reference_remote_classes
