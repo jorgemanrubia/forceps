@@ -18,11 +18,16 @@ class StiTest < ActiveSupport::TestCase
     sports_car = Forceps::Remote::Product.find_by_name('R8')
     assert_instance_of Forceps::Remote::Cars::German::CompactCar, compact_car
     assert_instance_of Forceps::Remote::Cars::German::SportsCar, sports_car
+   end
+
+  test "should use the correct type with namespaces models" do
+    Forceps::Remote::Product.find_by_name('R8').copy_to_local
+    assert_equal Product.find_by_name('CAR: GERMAN SPORTS CAR: R8').type, "Cars::German::SportsCar"
   end
 
   test "should download child objects when using single table inheritance" do
     Forceps::Remote::Product.find_by_name('audi').copy_to_local
-    copied_car=Product.find_by_name('CAR: audi')
+    copied_car = Product.find_by_name('CAR: audi')
     assert_not_nil copied_car
     assert_instance_of Car, copied_car
   end
