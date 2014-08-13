@@ -126,10 +126,10 @@ Forceps.configure reuse: {Tag => :name}
 Forceps::Remote::Product.find(1234).copy_to_local # for each remote tag, it will try to find a tag with the same name
 ```
 
-And, more generically, with a lambda that takes the local and remote objects and return the matched object (or nil if not found). The equivalent to the previous example would be:
+And, more generically, with a lambda that takes the remote object and returns the matched object (or nil if not found). The equivalent to the previous example would be:
 
 ```ruby
-Forceps.configure reuse: {Tag => ->(local_tag, remote_tag) {Tag.find_by_name remote_tag.name}}
+Forceps.configure reuse: {Tag => ->(remote_tag) {Tag.find_by_name remote_tag.name}}
 Forceps::Remote::Product.find(1234).copy_to_local 
 ```
 
