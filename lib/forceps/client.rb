@@ -47,8 +47,11 @@ module Forceps
       class_name = path.pop
 
       path.each do |module_name|
-        mod = Module.new
-        head = head.const_set(module_name, mod)
+        if head.const_defined?(module_name, false)
+          head = head.const_get(module_name, false)
+        else
+          head = head.const_set(module_name, Module.new)
+        end
       end
       head.const_set(class_name, build_new_remote_class(klass))
 

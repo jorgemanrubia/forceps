@@ -5,6 +5,7 @@ class StiTest < ActiveSupport::TestCase
     Forceps.configure
     create_remote_car({ name: 'audi' }, 'Car')
     create_remote_car({ name: 'A1' }, 'Cars::German::CompactCar')
+    create_remote_car({ name: 'R8' }, 'Cars::German::SportsCar')
   end
 
   test "should instantiate the proper remote record when fetching a record through the parent class" do
@@ -12,9 +13,11 @@ class StiTest < ActiveSupport::TestCase
     assert_instance_of Forceps::Remote::Car, remote_car
   end
 
-  test "should work with namespaced models" do
-    remote_car = Forceps::Remote::Product.find_by_name('A1')
-    assert_instance_of Forceps::Remote::Cars::German::CompactCar, remote_car
+   test "should work with namespaced models" do
+    compact_car = Forceps::Remote::Product.find_by_name('A1')
+    sports_car = Forceps::Remote::Product.find_by_name('R8')
+    assert_instance_of Forceps::Remote::Cars::German::CompactCar, compact_car
+    assert_instance_of Forceps::Remote::Cars::German::SportsCar, sports_car
   end
 
   test "should download child objects when using single table inheritance" do
