@@ -124,7 +124,7 @@ module Forceps
       end
 
       def to_local_class_name(remote_class_name)
-        remote_class_name.gsub('Forceps::Remote', '')
+        remote_class_name.gsub('Forceps::Remote::', '')
       end
 
       def has_sti_column?(object)

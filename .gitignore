@@ -8,3 +8,5 @@ test/dummy/tmp/
 test/dummy/.sass-cache
 .idea/
 Gemfile.lock
+.ruby-version
+.ruby-gemset
