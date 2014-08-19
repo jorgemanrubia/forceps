@@ -13,12 +13,17 @@ class StiTest < ActiveSupport::TestCase
     assert_instance_of Forceps::Remote::Car, remote_car
   end
 
-   test "should work with namespaced models" do
+  test "should be able to load remote objects by the STI class" do
+    remote_car = Forceps::Remote::Car.find_by_name('audi')
+    assert_instance_of Forceps::Remote::Car, remote_car
+  end
+
+  test "should work with namespaced models" do
     compact_car = Forceps::Remote::Product.find_by_name('A1')
     sports_car = Forceps::Remote::Product.find_by_name('R8')
     assert_instance_of Forceps::Remote::Cars::German::CompactCar, compact_car
     assert_instance_of Forceps::Remote::Cars::German::SportsCar, sports_car
-   end
+  end
 
   test "should use the correct type with namespaces models" do
     Forceps::Remote::Product.find_by_name('R8').copy_to_local
