@@ -184,6 +184,16 @@ invoice.line_items.last.class # Forceps::Remote::LineItem
 
 Rails 3 and 4
 
+## Run the test suite
+
+In order to run the test suite you must create the `test` and `remote` databases (both are local)
+
+```
+cd test/dummy 
+RAILS_ENV=test rake db:create db:migrate
+RAILS_ENV=remote rake db:create db:migrate
+```
+
 ## Disclaimer
 
 - It is recommended to use a read-only connection for production databases. Forceps will never modify remote objects when copying them but prevention is definitely better than cure when it comes to production data.
