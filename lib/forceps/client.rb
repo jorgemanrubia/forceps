@@ -146,11 +146,7 @@ module Forceps
       cloned_association = association.dup
       cloned_association.instance_variable_set("@klass", related_remote_class)
 
-      cloned_reflections = remote_model_class.reflections.dup
-      cloned_reflections[cloned_association.name.to_sym] = cloned_association
-      remote_model_class.reflections = cloned_reflections
+      ActiveRecord::Reflection.add_reflection(remote_model_class, cloned_association.name, cloned_association)
     end
   end
 end
-
-
