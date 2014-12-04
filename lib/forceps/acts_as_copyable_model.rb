@@ -44,6 +44,8 @@ module Forceps
       end
 
       def perform_copy(remote_object)
+        copy_associated_objects_in_belongs_to(remote_object)
+
         copied_object = local_copy_with_simple_attributes(remote_object)
         copied_remote_objects[remote_object] = copied_object
         copy_associated_objects(copied_object, remote_object) unless was_reused?(copied_object)
@@ -205,8 +207,9 @@ module Forceps
 
       def copy_associated_objects(local_object, remote_object)
         with_nested_logging do
-          [:has_many, :has_one, :belongs_to, :has_and_belongs_to_many].each do |association_kind|
+          [:has_one, :has_many, :has_and_belongs_to_many].each do |association_kind|
             copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
+            local_object.save!(validate: false)
           end
         end
       end
@@ -239,11 +242,15 @@ module Forceps
       def copy_associated_objects_in_has_one(local_object, remote_object, association_name)
         remote_associated_object = remote_object.send(association_name)
         local_object.send "#{association_name}=", remote_associated_object && copy(remote_associated_object)
-        local_object.save!(validate: false)
       end
 
-      def copy_associated_objects_in_belongs_to(local_object, remote_object, association_name)
-        copy_associated_objects_in_has_one local_object, remote_object, association_name
+      def copy_associated_objects_in_belongs_to(remote_object)
+        with_nested_logging do
+          associations_to_copy(remote_object, :belongs_to).collect(&:name).each do |association_name|
+            remote_associated_object = remote_object.send(association_name)
+            copy(remote_associated_object)
+          end
+        end
       end
 
       def copy_associated_objects_in_has_and_belongs_to_many(local_object, remote_object, association_name)
@@ -258,4 +265,3 @@ module Forceps
     end
   end
 end
-
