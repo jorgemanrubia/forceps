@@ -32,6 +32,7 @@ module Forceps
       end
 
       def copy(remote_object)
+        copy_associated_objects_in_belongs_to(remote_object) unless copied_remote_objects[remote_object]
         cached_local_copy(remote_object) || perform_copy(remote_object)
       end
 
@@ -44,8 +45,6 @@ module Forceps
       end
 
       def perform_copy(remote_object)
-        copy_associated_objects_in_belongs_to(remote_object)
-
         copied_object = local_copy_with_simple_attributes(remote_object)
         copied_remote_objects[remote_object] = copied_object
         copy_associated_objects(copied_object, remote_object) unless was_reused?(copied_object)
@@ -248,7 +247,7 @@ module Forceps
         with_nested_logging do
           associations_to_copy(remote_object, :belongs_to).collect(&:name).each do |association_name|
             remote_associated_object = remote_object.send(association_name)
-            copy(remote_associated_object)
+            copy(remote_associated_object) if remote_associated_object
           end
         end
       end
