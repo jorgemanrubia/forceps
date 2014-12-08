@@ -65,7 +65,7 @@ module Forceps
 
         include Forceps::ActsAsCopyableModel
 
-        # Intercep intantiation of records to make the 'type' column point to the corresponding remote class
+        # Intercept instantiation of records to make the 'type' column point to the corresponding remote class
         if Rails::VERSION::MAJOR >= 4
           def self.instantiate(record, column_types = {})
             __make_sti_column_point_to_forceps_remote_class(record)
@@ -118,13 +118,13 @@ module Forceps
       remote_model_class = remote_class_for(model_class.name)
 
       if association.options[:polymorphic]
-        reference_remote_class_in_polymorfic_association(association, remote_model_class)
+        reference_remote_class_in_polymorphic_association(association, remote_model_class)
       else
         reference_remote_class_in_normal_association(association, remote_model_class)
       end
     end
 
-    def reference_remote_class_in_polymorfic_association(association, remote_model_class)
+    def reference_remote_class_in_polymorphic_association(association, remote_model_class)
       foreign_type_attribute_name = association.foreign_type
 
       remote_model_class.send(:define_method, association.foreign_type) do
@@ -132,7 +132,7 @@ module Forceps
       end
 
       remote_model_class.send(:define_method, "[]") do |attribute_name|
-        if (attribute_name.to_s==foreign_type_attribute_name)
+        if (attribute_name.to_s == foreign_type_attribute_name)
           "Forceps::Remote::#{super(attribute_name)}"
         else
           super(attribute_name)
