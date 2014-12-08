@@ -7,9 +7,9 @@ class CallbacksTest < ActiveSupport::TestCase
 
   test "should invoke the configured 'after_each' callback" do
     after_each_callback_mock = MiniTest::Mock.new
-    after_each_callback_mock.expect(:call, nil) do |args|
-      assert_equal Product.find_by_name('MBP'), args[0]
-      assert_identical @remote_product, args[1]
+    after_each_callback_mock.expect(:call, nil) do |local, remote|
+      assert_equal Product.find_by_name('MBP'), local
+      assert_identical @remote_product, remote
     end
 
     Forceps.configure :after_each => {Product => after_each_callback_mock}
