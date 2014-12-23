@@ -22,7 +22,13 @@ module Forceps
     end
 
     def model_classes
-      @model_classes ||= ActiveRecord::Base.descendants - model_classes_to_exclude
+      @model_classes ||= filtered_model_classes
+    end
+
+    def filtered_model_classes
+      (ActiveRecord::Base.descendants - model_classes_to_exclude).reject do |klass|
+        klass.name.start_with?('HABTM_')
+      end
     end
 
     def model_classes_to_exclude
