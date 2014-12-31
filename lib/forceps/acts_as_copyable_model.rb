@@ -99,10 +99,8 @@ module Forceps
       end
 
       def create_local_copy_with_simple_attributes(remote_object)
-        # 'self.dup.becomes(Invoice)' won't work because of different  AR connections.
         debug "#{as_trace(remote_object)} copying..."
 
-        # todo: pending test for STI scenario
         base_class = base_local_class_for(remote_object)
 
         disable_all_callbacks_for(base_class)
