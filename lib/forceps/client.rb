@@ -59,7 +59,7 @@ module Forceps
       end
       head.const_set(class_name, build_new_remote_class(klass))
 
-      remote_class_for(full_class_name).establish_connection 'remote'
+      remote_class_for(full_class_name).establish_connection :remote
     end
 
     def build_new_remote_class(local_class)
