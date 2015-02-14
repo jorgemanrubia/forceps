@@ -22,7 +22,11 @@ module Forceps
     end
 
     def model_classes
-      @model_classes ||= ActiveRecord::Base.descendants - model_classes_to_exclude
+      @model_classes ||= begin
+        model_classes = ActiveRecord::Base.descendants - model_classes_to_exclude
+        model_classes = model_classes.reject { |model_class| model_class.name =~ /^HABTM_/ }
+        model_classes
+      end
     end
 
     def model_classes_to_exclude
@@ -41,9 +45,9 @@ module Forceps
 
     def declare_remote_model_class(klass)
       full_class_name = klass.name
-      head = Forceps::Remote
+      head            = Forceps::Remote
 
-      path = full_class_name.split("::")
+      path       = full_class_name.split("::")
       class_name = path.pop
 
       path.each do |module_name|
@@ -55,7 +59,7 @@ module Forceps
       end
       head.const_set(class_name, build_new_remote_class(klass))
 
-      remote_class_for(full_class_name).establish_connection :remote
+      remote_class_for(full_class_name).establish_connection 'remote'
     end
 
     def build_new_remote_class(local_class)
@@ -146,9 +150,9 @@ module Forceps
       cloned_association = association.dup
       cloned_association.instance_variable_set("@klass", related_remote_class)
 
-      cloned_reflections = remote_model_class.reflections.dup
+      cloned_reflections                                 = remote_model_class.reflections.dup
       cloned_reflections[cloned_association.name.to_sym] = cloned_association
-      remote_model_class.reflections = cloned_reflections
+      remote_model_class.reflections                     = cloned_reflections if remote_model_class.respond_to?(:reflections=)
     end
   end
 end
