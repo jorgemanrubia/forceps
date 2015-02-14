@@ -45,9 +45,9 @@ module Forceps
 
     def declare_remote_model_class(klass)
       full_class_name = klass.name
-      head            = Forceps::Remote
+      head = Forceps::Remote
 
-      path       = full_class_name.split("::")
+      path = full_class_name.split("::")
       class_name = path.pop
 
       path.each do |module_name|
@@ -146,13 +146,14 @@ module Forceps
 
     def reference_remote_class_in_normal_association(association, remote_model_class)
       related_remote_class = remote_class_for(association.klass.name)
-
       cloned_association = association.dup
+
       cloned_association.instance_variable_set("@klass", related_remote_class)
 
-      cloned_reflections                                 = remote_model_class.reflections.dup
-      cloned_reflections[cloned_association.name.to_sym] = cloned_association
-      remote_model_class.reflections                     = cloned_reflections if remote_model_class.respond_to?(:reflections=)
+      cloned_reflections = remote_model_class._reflections.dup
+      cloned_reflections[cloned_association.name.to_s] = cloned_association
+      remote_model_class.reflections = cloned_reflections if remote_model_class.respond_to?(:reflections=)
+      remote_model_class._reflections = cloned_reflections if remote_model_class.respond_to?(:_reflections=)
     end
   end
 end
