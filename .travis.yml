@@ -11,6 +11,7 @@ before_script:
   - RAILS_ENV=test rake db:create db:migrate
   - RAILS_ENV=remote rake db:create db:migrate
 script:
+  - cd ${TRAVIS_BUILD_DIR}
   - rake test
 
 
