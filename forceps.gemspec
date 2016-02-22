@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
     s.add_dependency "rails", "> 3.2.0"
   end
 
-  s.add_dependency "logging", "~> 1.6.2"
+  s.add_dependency "logging", "~> 2.0.0"
 
   s.add_development_dependency "sqlite3", "~> 1.3.8"
   s.add_development_dependency "database_cleaner", "~> 1.2.0"
