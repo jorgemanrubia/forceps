@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20140117112556) do
 
-  create_table "addresses", force: true do |t|
+  create_table "addresses", force: :cascade do |t|
     t.string   "street"
     t.string   "city"
     t.string   "country"
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20140117112556) do
     t.datetime "updated_at"
   end
 
-  create_table "invoices", force: true do |t|
+  create_table "invoices", force: :cascade do |t|
     t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20140117112556) do
     t.integer  "user_id"
   end
 
-  create_table "line_items", force: true do |t|
+  create_table "line_items", force: :cascade do |t|
     t.integer  "quantity"
     t.integer  "product_id"
     t.integer  "invoice_id"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20140117112556) do
     t.datetime "updated_at"
   end
 
-  create_table "products", force: true do |t|
+  create_table "products", force: :cascade do |t|
     t.string   "name"
     t.integer  "price"
     t.datetime "created_at"
@@ -46,16 +46,16 @@ ActiveRecord::Schema.define(version: 20140117112556) do
     t.string   "type"
   end
 
-  create_table "products_tags", id: false, force: true do |t|
+  create_table "products_tags", id: false, force: :cascade do |t|
     t.integer "product_id"
     t.integer "tag_id"
   end
 
-  create_table "tags", force: true do |t|
+  create_table "tags", force: :cascade do |t|
     t.string "name"
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
