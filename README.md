@@ -1,6 +1,6 @@
 # Forceps
 
-Have you ever needed to copy a given user from a production database into your local box in order to debug some obscure bug? 
+Have you ever needed to copy a given user from a production database into your local box in order to debug some obscure bug?
 
 Forceps lets you copy related models from one database into another. The source and target databases must support an active record connection. Typically, your source database is a remote production database and your target database is a local development one.
 
@@ -130,7 +130,7 @@ And, more generically, with a lambda that takes the remote object and returns th
 
 ```ruby
 Forceps.configure reuse: {Tag => ->(remote_tag) {Tag.find_by_name remote_tag.name}}
-Forceps::Remote::Product.find(1234).copy_to_local 
+Forceps::Remote::Product.find(1234).copy_to_local
 ```
 
 When a `reuse` option is provided but the model can't be found locally, it will be cloned normally.
@@ -147,12 +147,25 @@ Forceps.configure after_each: {
 }
 ```
 
+### Ignore a model by name
+
+Sometimes you have several models that all have a relationship to a model that you want to ignore.
+
+In this case it could be difficult to explicitly ignore each of those relationships. Instead, you can completely ignore a model anytime forceps tries to copy it.
+
+```ruby
+Forceps.configure ignore_model: ['LineItem']
+}
+```
+
+Then anytime this model is reached while copying a relation, it will be ignored.
+
 ### Rails and lazy loading
 
 In development, Rails loads classes lazily as they are used. Forceps will only know how to handle those classes defined when `Forceps.configure` is executed. You can make sure that all the Rails models are loaded before executing `Forceps.configure` with:
 
 ```ruby
-Rails.application.eager_load! 
+Rails.application.eager_load!
 ```
 
 ### Using the generated remote classes
@@ -189,7 +202,7 @@ Rails 3 and 4
 In order to run the test suite you must create the `test` and `remote` databases (both are local)
 
 ```
-cd test/dummy 
+cd test/dummy
 RAILS_ENV=test rake db:create db:migrate
 RAILS_ENV=remote rake db:create db:migrate
 ```
@@ -200,5 +213,3 @@ RAILS_ENV=remote rake db:create db:migrate
 - Thanks to [bandzoogle](http://bandzoogle.com) for supporting the development of this project.
 
 Pull requests are welcomed! [Overview of how forceps works internally](http://jorgemanrubia.net/2014/02/04/forceps-import-models-from-remote-databases/).
-
-
