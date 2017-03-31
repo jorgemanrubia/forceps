@@ -16,7 +16,7 @@ class CloneStructuresTest < ActiveSupport::TestCase
   test "should download object with 'has_many'" do
     2.times { |index| @remote_user.invoices.create! number: index+1, date: "2014-1-#{index+1}" }
 
-    Forceps::Remote::User.find(@remote_user).copy_to_local
+    Forceps::Remote::User.find(@remote_user.id).copy_to_local
 
     copied_user = User.find_by_name('Jorge')
     assert_identical @remote_user, copied_user
@@ -26,7 +26,7 @@ class CloneStructuresTest < ActiveSupport::TestCase
   test "should download object with 'belongs_to'" do
     @remote_invoice = @remote_user.invoices.create! number: 1234, date: "2014-1-3"
 
-    Forceps::Remote::Invoice.find(@remote_invoice).copy_to_local
+    Forceps::Remote::Invoice.find(@remote_invoice.id).copy_to_local
 
     copied_invoice = Invoice.find_by_number(1234)
     assert_identical @remote_invoice, copied_invoice
@@ -41,7 +41,7 @@ class CloneStructuresTest < ActiveSupport::TestCase
     end
     remote_products.each { |remote_product| remote_tags.each {|remote_tag| remote_product.tags << remote_tag} }
 
-    Forceps::Remote::Tag.find(remote_tags[0]).copy_to_local
+    Forceps::Remote::Tag.find(remote_tags[0].id).copy_to_local
 
     assert_equal 2, Product.count
     assert_equal 2, Tag.count
@@ -56,7 +56,7 @@ class CloneStructuresTest < ActiveSupport::TestCase
   test "should download object with 'has_one'" do
     remote_address = RemoteAddress.create!(street: 'Uria', city: 'Oviedo', country: 'Spain', user: @remote_user)
 
-    Forceps::Remote::User.find(@remote_user).copy_to_local
+    Forceps::Remote::User.find(@remote_user.id).copy_to_local
 
     copied_user = User.find_by_name('Jorge')
     assert_identical remote_address, copied_user.address

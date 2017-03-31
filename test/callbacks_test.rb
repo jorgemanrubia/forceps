@@ -14,7 +14,7 @@ class CallbacksTest < ActiveSupport::TestCase
 
     Forceps.configure :after_each => {Product => after_each_callback_mock}
 
-    Forceps::Remote::Product.find(@remote_product).copy_to_local
+    Forceps::Remote::Product.find(@remote_product.id).copy_to_local
 
     assert after_each_callback_mock.verify
   end

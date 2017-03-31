@@ -84,6 +84,10 @@ module Forceps
           end
         end
 
+        def self.sti_name
+          name.gsub("Forceps::Remote::", "")
+        end
+
         def self.__make_sti_column_point_to_forceps_remote_class(record)
           if record[inheritance_column].present?
             record[inheritance_column] = "Forceps::Remote::#{record[inheritance_column]}"
@@ -114,8 +118,8 @@ module Forceps
     end
 
     def make_associations_reference_remote_classes_for(model_class)
-      model_class.reflect_on_all_associations.each do |association|
-        next if association.class_name =~ /Forceps::Remote/ rescue next
+      model_class._reflections.values.each do |association|
+        next if association.class_name =~ /Forceps::Remote/ || association.class_name =~ /HABTM/ rescue next
         reference_remote_class(model_class, association)
       end
     end
@@ -151,7 +155,6 @@ module Forceps
 
       cloned_association = association.dup
       cloned_association.instance_variable_set("@klass", related_remote_class)
-
       ActiveRecord::Reflection.add_reflection(remote_model_class, cloned_association.name, cloned_association)
     end
   end

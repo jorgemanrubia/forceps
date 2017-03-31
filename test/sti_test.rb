@@ -1,5 +1,6 @@
 require 'test_helper'
 
+
 class StiTest < ActiveSupport::TestCase
   def setup
     Forceps.configure
