@@ -219,14 +219,19 @@ module Forceps
 
       def copy_objects_associated_by_association_kind(local_object, remote_object, association_kind)
         associations_to_copy(remote_object, association_kind).collect(&:name).each do |association_name|
-          send "copy_associated_objects_in_#{association_kind}", local_object, remote_object, association_name
+          unless options.fetch(:ignore_model, []).include?(remote_object.class.base_class.name)
+            send "copy_associated_objects_in_#{association_kind}", local_object, remote_object, association_name
+          end
         end
       end
 
       def associations_to_copy(remote_object, association_kind)
         excluded_attributes = attributes_to_exclude(remote_object)
         remote_object.class.reflect_on_all_associations(association_kind).reject do |association|
-          association.options[:through] || excluded_attributes.include?(:all_associations) || excluded_attributes.include?(association.name)
+          association.options[:through] ||
+            excluded_attributes.include?(:all_associations) ||
+            excluded_attributes.include?(association.name) ||
+            options.fetch(:ignore_model, []).include?(to_local_class_name(association.klass.name))
         end
       end
 
