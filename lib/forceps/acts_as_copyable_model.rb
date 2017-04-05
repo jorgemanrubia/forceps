@@ -232,6 +232,7 @@ module Forceps
             excluded_attributes.include?(:all_associations) ||
             excluded_attributes.include?(association.name) ||
             options.fetch(:ignore_model, []).include?(to_local_class_name(association.klass.name))
+            (!association.options[:polymorphic] && options.fetch(:ignore_model, []).include?(to_local_class_name(association.klass.name)))
         end
       end
 
