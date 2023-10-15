@@ -3,8 +3,10 @@ module Forceps
     extend ActiveSupport::Concern
 
     def copy_to_local
-      without_record_timestamps do
-        DeepCopier.new(forceps_options).copy(self)
+      ActiveRecord::Base.transaction do
+        without_record_timestamps do
+          DeepCopier.new(forceps_options).copy(self)
+        end
       end
     end
 
@@ -107,6 +109,7 @@ module Forceps
         disable_all_callbacks_for(base_class)
 
         cloned_object = base_class.new
+        cloned_object.id = remote_object.id # Use the same ID as remote
         copy_attributes(cloned_object, simple_attributes_to_copy(remote_object))
         cloned_object.save!(validate: false)
         invoke_callbacks(:after_each, cloned_object, remote_object)
